@@ -36,8 +36,11 @@ public static double getDistance(Point3d a, Point3d b){
 	return Math.sqrt(Math.pow(a.getX()-b.getX(), 2)+Math.pow(a.getY()-b.getY(), 2)+Math.pow(a.getZ()-b.getZ(), 2));
 }
 
-public boolean equals(Point3d obj){
-	if((obj.xCoord == this.xCoord)&&(obj.yCoord == this.yCoord)&&(obj.zCoord == this.zCoord)) return true;
+@Override
+public boolean equals(Object obj){
+	if (!(obj instanceof Point3d)) return false;
+	Point3d pointObj = (Point3d)obj;
+	if((pointObj.xCoord == this.xCoord)&&(pointObj.yCoord == this.yCoord)&&(pointObj.zCoord == this.zCoord)) return true;
 	else return false;
 }
 }

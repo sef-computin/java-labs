@@ -3,12 +3,12 @@ import java.util.*;
 import p1.Point3d;
 
 
-Locale.setDefault(Locale.US);
 
 public class Lab1{
 	public static void main(String[] args){
 		Locale.setDefault(Locale.US);
 		Scanner scan = new Scanner(System.in);
+
 		Point3d a = new Point3d(scan.nextDouble(),scan.nextDouble(),scan.nextDouble());
 		Point3d b = new Point3d(scan.nextDouble(),scan.nextDouble(),scan.nextDouble());
 		Point3d c = new Point3d(scan.nextDouble(),scan.nextDouble(),scan.nextDouble());
