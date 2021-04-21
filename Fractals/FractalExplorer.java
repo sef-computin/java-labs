@@ -22,6 +22,11 @@ public class FractalExplorer{
 	public JImageDisplay image;
 	private Handler handler = new Handler();
 
+	JComboBox<String> selectBox;
+	JLabel selectLabel;
+	JButton resetButton;
+	JButton saveButton;
+
 
 	public static void main(String[] args){
 		FractalExplorer fractalExplorer = new FractalExplorer(Integer.parseInt(args[0]));
@@ -44,7 +49,7 @@ public class FractalExplorer{
 				int rgbColor;
 
 				if (numIters != -1){
-					float hue = 0.9f + (float) numIters / 200f;
+					float hue = 0.6f + (float) numIters / 200f;
   					rgbColor = Color.HSBtoRGB(hue, 1f, 1f);
   				} else rgbColor = 0;
   				image.drawPixel(x, y, rgbColor);
@@ -67,10 +72,10 @@ public class FractalExplorer{
 		
 		
 
-		JComboBox selectBox = new JComboBox();
-		JLabel selectLabel = new JLabel("Fractal:  ");
-		JButton resetButton = new JButton("Сброс");
-		JButton saveButton = new JButton("Сохранить");
+		selectBox = new JComboBox<String>();
+		selectLabel = new JLabel("Fractal:  ");
+		resetButton = new JButton("Сброс");
+		saveButton = new JButton("Сохранить");
 
 		resetButton.setPreferredSize(new Dimension(200,50));
 		resetButton.setVisible(true);
@@ -85,6 +90,10 @@ public class FractalExplorer{
 
         selectLabel.setVisible(true);
         selectBox.setPreferredSize(new Dimension(300,30));
+        selectBox.addItem("Mandelbrot");
+        selectBox.addItem("Tricorn");
+        selectBox.addItem("Burning Ship");
+        selectBox.addActionListener(handler);
 
 		selectPanel.add(selectLabel);        	
         selectPanel.add(selectBox);
@@ -119,7 +128,7 @@ public class FractalExplorer{
                 fractalGen.getInitialRange(range);
 				drawFractal();
 			}
-			if (command.equals("save")){
+			else if (command.equals("save")){
 				JFileChooser chooser = new JFileChooser();
                 FileFilter filter = new FileNameExtensionFilter("PNG Images", "png");
                 chooser.setFileFilter(filter);
@@ -137,6 +146,14 @@ public class FractalExplorer{
                                 + ioException.getMessage() + " )");
                     }
                 }
+			}
+			else if (e.getSource() == selectBox){
+				if(selectBox.getSelectedItem().equals("Mandelbrot"))	fractalGen = new Mandelbrot();
+				if(selectBox.getSelectedItem().equals("Tricorn")) fractalGen = new Tricorn();
+				if(selectBox.getSelectedItem().equals("Burning Ship")) fractalGen = new BurningShip();
+				range = new Rectangle2D.Double();
+				fractalGen.getInitialRange(range);
+				drawFractal();			
 			}
 			
 		}
