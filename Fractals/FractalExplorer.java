@@ -21,6 +21,7 @@ public class FractalExplorer{
 	public Rectangle2D.Double range;
 	public JImageDisplay image;
 	private Handler handler = new Handler();
+	public int rowsLeft;
 
 	JComboBox<String> selectBox;
 	JLabel selectLabel;
@@ -35,25 +36,18 @@ public class FractalExplorer{
 
 	}
 
+	public void enableUI(boolean val){
+		selectBox.setEnabled(val);
+		saveButton.setEnabled(val);
+		resetButton.setEnabled(val);
+	}
 	
 	private void drawFractal(){
-		for(int x =0; x<side;x++){
-
-			double xCoord = FractalGenerator.getCoord(range.x,range.x+range.width, side, x);
-			
-			for (int y = 0; y<side;y++){
-
-				double yCoord = FractalGenerator.getCoord(range.y,range.y+range.height, side, y);
-
-				int numIters = fractalGen.numIterations(xCoord,yCoord);
-				int rgbColor;
-
-				if (numIters != -1){
-					float hue = 0.6f + (float) numIters / 200f;
-  					rgbColor = Color.HSBtoRGB(hue, 1f, 1f);
-  				} else rgbColor = 0;
-  				image.drawPixel(x, y, rgbColor);
-			}
+		enableUI(false);
+		rowsLeft = side;
+		for(int y =0; y<side;y++){
+			FractalWorker stringWork = new FractalWorker(y);
+			stringWork.execute();
 		}
 		image.repaint();
 	}
@@ -165,6 +159,41 @@ public class FractalExplorer{
 		
 			fractalGen.recenterAndZoomRange(range, xCoord, yCoord, 0.5);
 			drawFractal();
+		}
+	}
+
+	private class FractalWorker extends SwingWorker<Object, Object>{
+		int y;
+		int[] colors;
+
+		FractalWorker(int y){
+			this.y = y;
+		}
+
+		@Override
+		public Object doInBackground(){
+			this.colors = new int[side];
+			double yCoord = FractalGenerator.getCoord(range.y,range.y+range.height, side, this.y);
+			for (int i = 0; i<side;i++){
+				double xCoord = FractalGenerator.getCoord(range.x,range.x+range.width, side, i);
+				int numIters = fractalGen.numIterations(xCoord,yCoord);
+				if (numIters != -1){
+					float hue = 0.6f + (float) numIters / 200f;
+  					colors[i] = Color.HSBtoRGB(hue, 1f, 1f);
+  				} else colors[i] = 0;
+			}
+			return null;
+		}
+		@Override
+		protected void done(){
+			for(int i = 0;i<side;i++){
+				image.drawPixel(i, this.y, this.colors[i]);
+			}
+			image.repaint(0, 0, this.y, side, 1);
+			rowsLeft--;
+			if(rowsLeft==0){
+				enableUI(true);
+			}
 		}
 
 	}
