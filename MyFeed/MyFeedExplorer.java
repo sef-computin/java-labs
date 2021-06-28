@@ -73,6 +73,7 @@ public class MyFeedExplorer{
 		//logs = new JLabel[5];
 		for(int i = 0; i<5;i++){
 			//logs[i] = new JLabel("...");
+
 			
 			logs[i].setOpaque(true);
 			logs[i].setBackground(Color.lightGray);
@@ -167,7 +168,7 @@ public class MyFeedExplorer{
 		}
 		@Override
    	 	public void mouseEntered(MouseEvent e) {
-        	e.getComponent().setBackground(Color.GRAY);
+        	e.getComponent().setBackground(new Color(255, 128, 0, 200));
     	}
     	@Override
    	 	public void mouseExited(MouseEvent e) {
